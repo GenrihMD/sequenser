@@ -71,27 +71,57 @@ const audioCtx = new AudioContext()
 const oscillator = audioCtx.createOscillator();
 oscillator.type = 'square';
 
+const real = [0];
+const imaginary = [0];
+
+for (let i = 0; i < 8; i++) {
+    real.push(Math.cos(i));
+    imaginary.push(Math.random());
+}
+
+var periodicWave = audioCtx.createPeriodicWave(new Float32Array(real), new Float32Array(imaginary));
+oscillator.setPeriodicWave(periodicWave);
+
+let connected = false;
+
 class Player {
 
     constructor(pattern) {
         this.pattern = pattern
         this.step = 0
-        oscillator.connect(audioCtx.destination)
+        this.isStarted = false
+        this.isConnected = false
     }
 
     setTone(tone) {
-        oscillator.detune.value = tone
+        oscillator.frequency.value = tone
     }
 
-    play() {
-        oscillator.start()
+    playpause() {
+        if (!this.isStarted)  {
+            oscillator.start(0)
+            this.isStarted = true
+        }
 
-        setInterval(() => {
-            const toneNum = this.pattern.beats[this.step][0] - 1
-            const tone = TONES[toneNum]
-            this.setTone(tone)
-            oscillator.start()
-        }, 1000)
+        if (!this.isConnected) {
+            oscillator.connect(audioCtx.destination);
+            setInterval(() => {
+                if (this.step >= 16) this.step = 0;
+
+                let toneNum = this.pattern.beats[this.step][0] - 1
+
+                if (!toneNum) toneNum = 0;
+
+                const tone = TONES[toneNum]
+                this.setTone(tone)
+                this.step++;
+                console.log(tone)
+            }, 500)
+        }
+        else {
+            oscillator.disconnect();
+        }
+        this.isConnected = !this.isConnected;
     }
 }
 
@@ -99,7 +129,7 @@ const player = new Player(p)
 
 window.addEventListener('keydown', function () {
     audioCtx.resume().then(() => {
-        player.play()
+        player.playpause()
     });
 })
 
