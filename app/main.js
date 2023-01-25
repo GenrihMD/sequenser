@@ -56,3 +56,52 @@ canvas.addEventListener('click', function (e) {
 })
 
 drawBeats();
+
+////////////////
+//// AUDIO  ////
+////////////////
+
+const TONES = [
+    55, 58.2706, 61.7354, 65.4064, 69.2958,
+    73.4162, 77.7818, 82.4070, 87.3072, 92.4986,
+    97.9990, 103.8260
+]
+
+const audioCtx = new AudioContext()
+const oscillator = audioCtx.createOscillator();
+oscillator.type = 'square';
+
+class Player {
+
+    constructor(pattern) {
+        this.pattern = pattern
+        this.step = 0
+        oscillator.connect(audioCtx.destination)
+    }
+
+    setTone(tone) {
+        oscillator.detune.value = tone
+    }
+
+    play() {
+        oscillator.start()
+
+        setInterval(() => {
+            const toneNum = this.pattern.beats[this.step][0] - 1
+            const tone = TONES[toneNum]
+            this.setTone(tone)
+            oscillator.start()
+        }, 1000)
+    }
+}
+
+const player = new Player(p)
+
+window.addEventListener('keydown', function () {
+    audioCtx.resume().then(() => {
+        player.play()
+    });
+})
+
+
+
