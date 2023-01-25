@@ -48,27 +48,11 @@
             border-collapse: collapse;
             border-spacing: 0;
         }
-
-        /*.container {  display: grid;*/
-        /*    grid-template-columns: 1fr;*/
-        /*    grid-template-rows: 0.2fr 1.2fr;*/
-        /*    gap: 0px 0px;*/
-        /*    grid-auto-flow: row;*/
-        /*    grid-template-areas:*/
-        /*        "panel"*/
-        /*        "sequencer";*/
-        /*}*/
-        .panel {
-            height: 50px;
-        }
-        /*.sequencer { grid-area: sequencer; }*/
         #canvas {
             width: 100%;
-            height: calc(100vh - 50px);
+            height: 100vh;
         }
-        #canvas2 {
-            display: none;
-        }
+
     </style>
 </head>
 <body>
@@ -76,7 +60,6 @@
 
         <div class="sequencer">
             <canvas id="canvas" width="500" height="500"></canvas>
-            <canvas id="canvas2" width="500" height="500"></canvas>
         </div>
     </div>
 

@@ -1,10 +1,58 @@
+const TONES_NUMBER = 12
+const BEATS_NUMBER = 16
+
 const canvasBoundingRect = canvas.getBoundingClientRect()
-canvas.width = canvasBoundingRect.width
-canvas.height = canvasBoundingRect.height
+const w = canvas.width = canvasBoundingRect.width
+const h = canvas.height = canvasBoundingRect.height
 
-const offscreen = canvas.transferControlToOffscreen();
+const ctx = canvas.getContext('2d')
 
-const worker = new Worker("/app/canvas-worker.js");
-worker.postMessage({ canvas: offscreen }, [offscreen]);
+const  grd = ctx.createLinearGradient(0, w, 0, 0);
+grd.addColorStop(0.2, "red");
+grd.addColorStop(1, "green");
+ctx.fillStyle = grd;
 
+const beatWidth = w / BEATS_NUMBER
+const lineHeight = h / TONES_NUMBER
 
+class Pattern {
+    constructor() {
+        this.beats = [
+            [1], [], [2], [],
+            [3], [], [2], [],
+            [1], [], [2], [],
+            [3], [], [2], [10],
+        ]
+    }
+}
+
+const p = new Pattern()
+
+function drawBeats() {
+    ctx.clearRect(0,0, w, h)
+    for (let i = 0; i < BEATS_NUMBER; i++) {
+        const beat = p.beats[i]
+        beat.forEach( b => ctx.fillRect(i * beatWidth, h - b * lineHeight, beatWidth, lineHeight) )
+    }
+}
+
+canvas.addEventListener('click', function (e) {
+    const x = e.offsetX
+    const y = e.offsetY;
+
+    const lineNumber = Math.floor((h - y) / lineHeight) + 1
+    const beatNumber = Math.floor(x / beatWidth)
+
+    const beat = p.beats[beatNumber]
+    console.log(beat)
+
+    if (beat.includes(lineNumber)) {
+        beat.splice(beat.indexOf(lineNumber), 1);
+    } else {
+        beat.push(lineNumber)
+    }
+
+    drawBeats();
+})
+
+drawBeats();
