@@ -49,14 +49,35 @@
             border-spacing: 0;
         }
 
+        /*.container {  display: grid;*/
+        /*    grid-template-columns: 1fr;*/
+        /*    grid-template-rows: 0.2fr 1.2fr;*/
+        /*    gap: 0px 0px;*/
+        /*    grid-auto-flow: row;*/
+        /*    grid-template-areas:*/
+        /*        "panel"*/
+        /*        "sequencer";*/
+        /*}*/
+        .panel {
+            height: 50px;
+        }
+        /*.sequencer { grid-area: sequencer; }*/
         #canvas {
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: calc(100vh - 50px);
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas" width="500" height="500"></canvas>
+    <div class="container">
+        <div class="panel">
+
+        </div>
+        <div class="sequencer">
+            <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+    </div>
+
     <script src="app/main.js"></script>
 </body>
 </html>
