@@ -9,8 +9,8 @@ const beatWidth = w / BEATS_NUMBER
 const lineHeight = h / TONES_NUMBER
 
 const ctx = canvas.getContext('2d')
-ctx.strokeStyle = 'black'
 
+ctx.strokeStyle = 'black'
 function drawLine(x1, y1, x2, y2) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
@@ -90,20 +90,20 @@ const TONES = [
 ]
 
 const DRUM_FILES = [
-    '/assets/Drum Shots/Kicks/BVKER - Drillers Kick - 01.wav',
-    '/assets/Drum Shots/Snares/BVKER - Drillers Snare - 01.wav',
-    '/assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
-    '/assets/Drum Shots/Cymbals/BVKER - Drillers Open Hat - 03.wav',
+    'assets/Drum Shots/Kicks/BVKER - Drillers Kick - 01.wav',
+    'assets/Drum Shots/Snares/BVKER - Drillers Snare - 01.wav',
+    'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
+    'assets/Drum Shots/Cymbals/BVKER - Drillers Open Hat - 03.wav',
 
-    '/assets/Drum Shots/Percs/BVKER - Drillers Clap 01.wav',
-    '/assets/Drum Shots/Percs/BVKER - Drillers Clap 02.wav',
-    '/assets/Drum Shots/Percs/BVKER - Drillers Snare - 05.wav',
-    '/assets/Drum Shots/Percs/BVKER - Drillers Kick - 06.wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers Clap 01.wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers Clap 02.wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers Snare - 05.wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers Kick - 06.wav',
 
-    '/assets/Drum Shots/Percs/BVKER - Drillers Crash - 01.wav',
-    '/assets/Drum Shots/Percs/BVKER - Drillers Ride - 01.wav',
-    '/assets/Drum Shots/Percs/BVKER - Drillers 808 - 16 - (A).wav',
-    '/assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers Crash - 01.wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers Ride - 01.wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers 808 - 16 - (A).wav',
+    'assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav',
 ]
 
 const DRUMS = []
@@ -147,7 +147,6 @@ class Player {
                 this.pattern.beats[this.step].forEach( toneNum => {
                     playSample(audioCtx, DRUMS[toneNum - 1], audioCtx.currentTime)
                 })
-
 
                 this.step++;
             }, 120)
