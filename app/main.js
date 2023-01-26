@@ -102,7 +102,7 @@ const DRUM_FILES = [
 
     'assets/Drum Shots/Cymbals/BVKER - Drillers Crash - 01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Ride - 01.wav',
-    'assets/Drum Shots/808s/BVKER - Drillers 808 - 16 - (A).wav',
+    'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 10.wav',
     'assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav',
 ]
 
