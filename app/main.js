@@ -95,14 +95,14 @@ const DRUM_FILES = [
     'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Open Hat - 03.wav',
 
-    'assets/Drum Shots/Percs/BVKER - Drillers Clap 01.wav',
-    'assets/Drum Shots/Percs/BVKER - Drillers Clap 02.wav',
-    'assets/Drum Shots/Percs/BVKER - Drillers Snare - 05.wav',
-    'assets/Drum Shots/Percs/BVKER - Drillers Kick - 06.wav',
+    'assets/Drum Shots/Claps/BVKER - Drillers Clap 01.wav',
+    'assets/Drum Shots/Claps/BVKER - Drillers Clap 02.wav',
+    'assets/Drum Shots/Snares/BVKER - Drillers Snare - 05.wav',
+    'assets/Drum Shots/Kicks/BVKER - Drillers Kick - 06.wav',
 
-    'assets/Drum Shots/Percs/BVKER - Drillers Crash - 01.wav',
-    'assets/Drum Shots/Percs/BVKER - Drillers Ride - 01.wav',
-    'assets/Drum Shots/Percs/BVKER - Drillers 808 - 16 - (A).wav',
+    'assets/Drum Shots/Cymbals/BVKER - Drillers Crash - 01.wav',
+    'assets/Drum Shots/Cymbals/BVKER - Drillers Ride - 01.wav',
+    'assets/Drum Shots/808s/BVKER - Drillers 808 - 16 - (A).wav',
     'assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav',
 ]
 
