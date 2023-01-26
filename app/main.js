@@ -18,10 +18,10 @@ const lineHeight = h / TONES_NUMBER
 class Pattern {
     constructor() {
         this.beats = [
-            [1], [], [2], [],
-            [3], [], [2], [],
-            [1], [], [2], [],
-            [3], [], [2], [10],
+            [1], [], [], [2],
+            [], [], [3], [],
+            [], [], [1], [],
+            [2], [], [], [3 ],
         ]
     }
 }
@@ -67,20 +67,37 @@ const TONES = [
     97.9990, 103.8260
 ]
 
-const audioCtx = new AudioContext()
-const oscillator = audioCtx.createOscillator();
-oscillator.type = 'square';
+const DRUM_FILES = [
+    '/assets/Drum Shots/Kicks/BVKER - Drillers Kick - 01.wav',
+    '/assets/Drum Shots/Snares/BVKER - Drillers Snare - 01.wav',
+    'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
+    '/assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav'
+]
 
-const real = [0];
-const imaginary = [0];
+const DRUMS = []
 
-for (let i = 0; i < 8; i++) {
-    real.push(Math.cos(i));
-    imaginary.push(Math.random());
+async function getFile(audioContext, filepath) {
+    const response = await fetch(filepath);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    return audioBuffer;
 }
 
-var periodicWave = audioCtx.createPeriodicWave(new Float32Array(real), new Float32Array(imaginary));
-oscillator.setPeriodicWave(periodicWave);
+function playSample(audioContext, audioBuffer, time) {
+    const sampleSource = new AudioBufferSourceNode(audioCtx, {
+        buffer: audioBuffer,
+        playbackRate: 1,
+    });
+    sampleSource.connect(audioContext.destination);
+    sampleSource.start(time);
+    return sampleSource;
+}
+
+const audioCtx = new AudioContext()
+
+DRUM_FILES.forEach( (file, index) => {
+    getFile(audioCtx, file).then( b => DRUMS[index] = b )
+})
 
 let connected = false;
 
@@ -98,28 +115,19 @@ class Player {
     }
 
     playpause() {
-        if (!this.isStarted)  {
-            oscillator.start(0)
-            this.isStarted = true
-        }
-
         if (!this.isConnected) {
-            oscillator.connect(audioCtx.destination);
-            setInterval(() => {
-                if (this.step >= 16) this.step = 0;
-
+            this.interval = setInterval(() => {
+                if (this.step >= 16) this.step = 0
                 let toneNum = this.pattern.beats[this.step][0] - 1
+                if (toneNum == undefined) return;
 
-                if (!toneNum) toneNum = 0;
+                playSample(audioCtx, DRUMS[toneNum], audioCtx.currentTime)
 
-                const tone = TONES[toneNum]
-                this.setTone(tone)
                 this.step++;
-                console.log(tone)
-            }, 500)
+            }, 120)
         }
         else {
-            oscillator.disconnect();
+            clearInterval(this.interval)
         }
         this.isConnected = !this.isConnected;
     }
