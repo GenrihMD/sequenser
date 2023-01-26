@@ -5,22 +5,42 @@ const canvasBoundingRect = canvas.getBoundingClientRect()
 const w = canvas.width = canvasBoundingRect.width
 const h = canvas.height = canvasBoundingRect.height
 
+const beatWidth = w / BEATS_NUMBER
+const lineHeight = h / TONES_NUMBER
+
 const ctx = canvas.getContext('2d')
+ctx.strokeStyle = 'black'
+
+function drawLine(x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+}
+
+for (let i = 0; i < TONES_NUMBER; i++) {
+    drawLine(0, i * lineHeight, w, i * lineHeight)
+}
+
+for (let j = 0; j < BEATS_NUMBER; j++) {
+    drawLine(j * beatWidth, 0, j * beatWidth, h)
+}
+
+const background = ctx.getImageData(0, 0, w, h)
 
 const  grd = ctx.createLinearGradient(0, w, 0, 0);
 grd.addColorStop(0.2, "red");
 grd.addColorStop(1, "green");
 ctx.fillStyle = grd;
 
-const beatWidth = w / BEATS_NUMBER
-const lineHeight = h / TONES_NUMBER
+
 
 class Pattern {
     constructor() {
         this.beats = [
-            [1], [], [], [2],
-            [], [], [3], [],
-            [], [], [1], [],
+            [1], [], [4], [],
+            [2], [], [3], [3],
+            [3], [3], [1], [],
             [2], [], [], [3 ],
         ]
     }
@@ -30,11 +50,14 @@ const p = new Pattern()
 
 function drawBeats() {
     ctx.clearRect(0,0, w, h)
+    ctx.putImageData(background, 0, 0)
     for (let i = 0; i < BEATS_NUMBER; i++) {
         const beat = p.beats[i]
         beat.forEach( b => ctx.fillRect(i * beatWidth, h - b * lineHeight, beatWidth, lineHeight) )
     }
 }
+
+//////////////////////////
 
 canvas.addEventListener('click', function (e) {
     const x = e.offsetX
@@ -44,7 +67,6 @@ canvas.addEventListener('click', function (e) {
     const beatNumber = Math.floor(x / beatWidth)
 
     const beat = p.beats[beatNumber]
-    console.log(beat)
 
     if (beat.includes(lineNumber)) {
         beat.splice(beat.indexOf(lineNumber), 1);
@@ -52,14 +74,15 @@ canvas.addEventListener('click', function (e) {
         beat.push(lineNumber)
     }
 
-    drawBeats();
+    requestAnimationFrame(drawBeats);
 })
 
 drawBeats();
 
-////////////////
-//// AUDIO  ////
-////////////////
+
+///////////////////////////
+///////// AUDIO ///////////
+///////////////////////////
 
 const TONES = [
     55, 58.2706, 61.7354, 65.4064, 69.2958,
@@ -70,7 +93,8 @@ const TONES = [
 const DRUM_FILES = [
     '/assets/Drum Shots/Kicks/BVKER - Drillers Kick - 01.wav',
     '/assets/Drum Shots/Snares/BVKER - Drillers Snare - 01.wav',
-    'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
+    '/assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
+    '/assets/Drum Shots/Cymbals/BVKER - Drillers Open Hat - 03.wav',
     '/assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav'
 ]
 
@@ -96,10 +120,8 @@ function playSample(audioContext, audioBuffer, time) {
 const audioCtx = new AudioContext()
 
 DRUM_FILES.forEach( (file, index) => {
-    getFile(audioCtx, file).then( b => DRUMS[index] = b )
+    getFile(audioCtx, file).then( d => DRUMS[index] = d )
 })
-
-let connected = false;
 
 class Player {
 
@@ -107,15 +129,10 @@ class Player {
         this.pattern = pattern
         this.step = 0
         this.isStarted = false
-        this.isConnected = false
-    }
-
-    setTone(tone) {
-        oscillator.frequency.value = tone
     }
 
     playpause() {
-        if (!this.isConnected) {
+        if (!this.isStarted) {
             this.interval = setInterval(() => {
                 if (this.step >= 16) this.step = 0
                 let toneNum = this.pattern.beats[this.step][0] - 1
@@ -129,7 +146,7 @@ class Player {
         else {
             clearInterval(this.interval)
         }
-        this.isConnected = !this.isConnected;
+        this.isStarted = !this.isStarted;
     }
 }
 
