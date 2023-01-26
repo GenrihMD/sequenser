@@ -34,14 +34,13 @@ grd.addColorStop(1, "green");
 ctx.fillStyle = grd;
 
 
-
 class Pattern {
     constructor() {
         this.beats = [
-            [1], [], [1], [],
-            [2], [], [3], [],
-            [3], [3], [1], [],
-            [2], [], [], [3 ],
+            [1, 3], [], [1, 3, 4], [],
+            [2, 3], [], [3], [],
+            [3], [3], [1, 3], [],
+            [2, 3], [], [3], [3 ],
         ]
     }
 }
@@ -95,7 +94,16 @@ const DRUM_FILES = [
     '/assets/Drum Shots/Snares/BVKER - Drillers Snare - 01.wav',
     '/assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
     '/assets/Drum Shots/Cymbals/BVKER - Drillers Open Hat - 03.wav',
-    '/assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav'
+
+    '/assets/Drum Shots/Percs/BVKER - Drillers Clap 01.wav',
+    '/assets/Drum Shots/Percs/BVKER - Drillers Clap 02.wav',
+    '/assets/Drum Shots/Percs/BVKER - Drillers Snare - 05.wav',
+    '/assets/Drum Shots/Percs/BVKER - Drillers Kick - 06.wav',
+
+    '/assets/Drum Shots/Percs/BVKER - Drillers Crash - 01.wav',
+    '/assets/Drum Shots/Percs/BVKER - Drillers Ride - 01.wav',
+    '/assets/Drum Shots/Percs/BVKER - Drillers 808 - 16 - (A).wav',
+    '/assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav',
 ]
 
 const DRUMS = []
@@ -135,10 +143,11 @@ class Player {
         if (!this.isStarted) {
             this.interval = setInterval(() => {
                 if (this.step >= 16) this.step = 0
-                let toneNum = this.pattern.beats[this.step][0] - 1
-                if (toneNum == undefined) return;
 
-                playSample(audioCtx, DRUMS[toneNum], audioCtx.currentTime)
+                this.pattern.beats[this.step].forEach( toneNum => {
+                    playSample(audioCtx, DRUMS[toneNum - 1], audioCtx.currentTime)
+                })
+
 
                 this.step++;
             }, 120)
