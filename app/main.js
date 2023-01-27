@@ -8,9 +8,22 @@ const h = canvas.height = canvasBoundingRect.height
 const beatWidth = w / BEATS_NUMBER
 const lineHeight = h / TONES_NUMBER
 
+function getLineY(lineNumber) {
+    return lineNumber * lineHeight
+}
+
+function getBeatX(beatNumber) {
+    return beatNumber * beatWidth
+}
+
 const ctx = canvas.getContext('2d')
 
-ctx.strokeStyle = 'black'
+ctx.fillStyle = 'rgb(229 229 229)'
+for (let j = 1; j < BEATS_NUMBER; j+=2) {
+    const x = getBeatX(j)
+    ctx.fillRect(x, 0, beatWidth, h)
+}
+
 function drawLine(x1, y1, x2, y2) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
@@ -18,12 +31,15 @@ function drawLine(x1, y1, x2, y2) {
     ctx.stroke();
 }
 
+ctx.strokeStyle = 'black'
 for (let i = 0; i < TONES_NUMBER; i++) {
-    drawLine(0, i * lineHeight, w, i * lineHeight)
+    const y = getLineY(i)
+    drawLine(0, y, w, y)
 }
 
 for (let j = 0; j < BEATS_NUMBER; j++) {
-    drawLine(j * beatWidth, 0, j * beatWidth, h)
+    const x = getBeatX(j)
+    drawLine(x, 0, x, h)
 }
 
 const background = ctx.getImageData(0, 0, w, h)
