@@ -1,3 +1,5 @@
+import { Pattern } from "./patterns.js";
+
 const LINE_NUMBER = 12
 const BEATS_NUMBER = 16
 
@@ -55,21 +57,10 @@ grd.addColorStop(0.2, "#ff7900d9");
 grd.addColorStop(1, "#106822d9");
 ctx.fillStyle = grd;
 
-class Pattern {
-    constructor() {
-        this.beats = [
-            [1], [], [11], [],
-            [2, 5, 7], [], [11], [],
-            [], [], [1, 11], [],
-            [2, 5, 7], [], [11], [],
-        ]
-    }
-}
-
 const p = new Pattern()
 
 function drawBeats() {
-    ctx.clearRect(0,0, w, h)
+    console.log(background)
     ctx.putImageData(background, 0, 0)
     for (let i = 0; i < BEATS_NUMBER; i++) {
         const beat = p.beats[i]
@@ -111,8 +102,8 @@ const TONES = [
 ]
 
 const DRUM_FILES = [
-    'assets/Drum Shots/Kicks/BVKER - Drillers Kick - 01.wav',
-    'assets/Drum Shots/Snares/BVKER - Drillers Snare - 01.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Kit 3/kickldk16.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Kit 1/snareldk01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Open Hat - 03.wav',
 
@@ -123,8 +114,8 @@ const DRUM_FILES = [
 
     'assets/Drum Shots/Cymbals/BVKER - Drillers Crash - 01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Ride - 01.wav',
-    'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 10.wav',
-    'assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Kit 3/hatldk11.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Klub Kit/chbb31.wav',
 ]
 
 const DRUMS = []
@@ -153,38 +144,76 @@ DRUM_FILES.forEach( (file, index) => {
 })
 
 class Player {
+    #isStarted = false
+    #temp = 100
 
     constructor(pattern) {
         this.pattern = pattern
         this.step = 0
-        this.isStarted = false
     }
 
     playpause() {
-        if (!this.isStarted) {
-            this.interval = setInterval(() => {
-                if (this.step >= 16) this.step = 0
-
-                this.pattern.beats[this.step].forEach( toneNum => {
-                    playSample(audioCtx, DRUMS[toneNum - 1], audioCtx.currentTime)
-                })
-
-                this.step++;
-            }, 100)
+        if (!this.#isStarted) {
+            this.play()
         }
         else {
-            clearInterval(this.interval)
+            this.pause()
         }
-        this.isStarted = !this.isStarted;
+        this.#isStarted = !this.#isStarted;
+    }
+
+    play() {
+        this.interval = setInterval(() => {
+            if (this.step >= 16) this.step = 0
+
+            this.pattern.beats[this.step].forEach( toneNum => {
+                playSample(audioCtx, DRUMS[toneNum - 1], audioCtx.currentTime)
+            })
+
+            this.step++;
+        }, this.#temp)
+    }
+
+    pause() {
+        clearInterval(this.interval)
+    }
+
+    incTemp() {
+        this.#temp -=5
+        this.updatePlaying()
+    }
+
+    decTemp() {
+        this.#temp +=5
+        this.updatePlaying()
+    }
+
+    updatePlaying() {
+        if (this.#isStarted) {
+            this.pause()
+            this.play()
+        }
     }
 }
 
 const player = new Player(p)
 
-window.addEventListener('keydown', function () {
-    audioCtx.resume().then(() => {
-        player.playpause()
-    });
+window.addEventListener('keydown', function (e) {
+    switch (e.code) {
+        case 'Space':
+            audioCtx.resume().then(() => {
+                player.playpause()
+            })
+            break
+
+        case 'Equal':
+            player.incTemp()
+            break
+
+        case 'Minus':
+            player.decTemp()
+            break
+    }
 })
 
 
