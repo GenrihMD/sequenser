@@ -144,7 +144,7 @@ DRUM_FILES.forEach( (file, index) => {
 
 class Player {
     #isStarted = false
-    #temp = 55
+    #temp = 100
 
     constructor(pattern) {
         this.pattern = pattern
