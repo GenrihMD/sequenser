@@ -60,7 +60,6 @@ ctx.fillStyle = grd;
 const p = new Pattern()
 
 function drawBeats() {
-    console.log(background)
     ctx.putImageData(background, 0, 0)
     for (let i = 0; i < BEATS_NUMBER; i++) {
         const beat = p.beats[i]
