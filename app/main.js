@@ -144,38 +144,76 @@ DRUM_FILES.forEach( (file, index) => {
 })
 
 class Player {
+    #isStarted = false
+    #temp = 100
 
     constructor(pattern) {
         this.pattern = pattern
         this.step = 0
-        this.isStarted = false
     }
 
     playpause() {
-        if (!this.isStarted) {
-            this.interval = setInterval(() => {
-                if (this.step >= 16) this.step = 0
-
-                this.pattern.beats[this.step].forEach( toneNum => {
-                    playSample(audioCtx, DRUMS[toneNum - 1], audioCtx.currentTime)
-                })
-
-                this.step++;
-            }, 100)
+        if (!this.#isStarted) {
+            this.play()
         }
         else {
-            clearInterval(this.interval)
+            this.pause()
         }
-        this.isStarted = !this.isStarted;
+        this.#isStarted = !this.#isStarted;
+    }
+
+    play() {
+        this.interval = setInterval(() => {
+            if (this.step >= 16) this.step = 0
+
+            this.pattern.beats[this.step].forEach( toneNum => {
+                playSample(audioCtx, DRUMS[toneNum - 1], audioCtx.currentTime)
+            })
+
+            this.step++;
+        }, this.#temp)
+    }
+
+    pause() {
+        clearInterval(this.interval)
+    }
+
+    incTemp() {
+        this.#temp -=5
+        this.updatePlaying()
+    }
+
+    decTemp() {
+        this.#temp +=5
+        this.updatePlaying()
+    }
+
+    updatePlaying() {
+        if (this.#isStarted) {
+            this.pause()
+            this.play()
+        }
     }
 }
 
 const player = new Player(p)
 
-window.addEventListener('keydown', function () {
-    audioCtx.resume().then(() => {
-        player.playpause()
-    });
+window.addEventListener('keydown', function (e) {
+    switch (e.code) {
+        case 'Space':
+            audioCtx.resume().then(() => {
+                player.playpause()
+            })
+            break
+
+        case 'Equal':
+            player.incTemp()
+            break
+
+        case 'Minus':
+            player.decTemp()
+            break
+    }
 })
 
 
