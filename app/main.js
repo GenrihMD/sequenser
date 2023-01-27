@@ -1,4 +1,4 @@
-const TONES_NUMBER = 12
+const LINE_NUMBER = 12
 const BEATS_NUMBER = 16
 
 const canvasBoundingRect = canvas.getBoundingClientRect()
@@ -6,7 +6,7 @@ const w = canvas.width = canvasBoundingRect.width
 const h = canvas.height = canvasBoundingRect.height
 
 const beatWidth = w / BEATS_NUMBER
-const lineHeight = h / TONES_NUMBER
+const lineHeight = h / LINE_NUMBER
 
 function getLineY(lineNumber) {
     return lineNumber * lineHeight
@@ -19,9 +19,15 @@ function getBeatX(beatNumber) {
 const ctx = canvas.getContext('2d')
 
 ctx.fillStyle = 'rgb(229 229 229)'
-for (let j = 1; j < BEATS_NUMBER; j+=2) {
-    const x = getBeatX(j)
+for (let b = 1; b < BEATS_NUMBER; b+=2) {
+    const x = getBeatX(b)
     ctx.fillRect(x, 0, beatWidth, h)
+}
+
+ctx.fillStyle = 'rgb(250 250 250 / 25%)'
+for (let l = 1; l < LINE_NUMBER; l+=2) {
+    const y = getLineY(l)
+    ctx.fillRect(0, y, w, lineHeight)
 }
 
 function drawLine(x1, y1, x2, y2) {
@@ -31,32 +37,31 @@ function drawLine(x1, y1, x2, y2) {
     ctx.stroke();
 }
 
-ctx.strokeStyle = 'black'
-for (let i = 0; i < TONES_NUMBER; i++) {
-    const y = getLineY(i)
+ctx.strokeStyle = 'rgb(200 200 200)'
+for (let l = 0; l < LINE_NUMBER; l++) {
+    const y = getLineY(l)
     drawLine(0, y, w, y)
 }
 
-for (let j = 0; j < BEATS_NUMBER; j++) {
-    const x = getBeatX(j)
+for (let b = 0; b < BEATS_NUMBER; b++) {
+    const x = getBeatX(b)
     drawLine(x, 0, x, h)
 }
 
 const background = ctx.getImageData(0, 0, w, h)
 
-const  grd = ctx.createLinearGradient(0, w, 0, 0);
-grd.addColorStop(0.2, "red");
-grd.addColorStop(1, "green");
+const grd = ctx.createLinearGradient(0, w, 0, 0);
+grd.addColorStop(0.2, "#ff7900d9");
+grd.addColorStop(1, "#106822d9");
 ctx.fillStyle = grd;
-
 
 class Pattern {
     constructor() {
         this.beats = [
-            [1, 3], [], [1, 3, 4], [],
-            [2, 3], [], [3], [],
-            [3], [3], [1, 3], [],
-            [2, 3], [], [3], [3 ],
+            [1], [], [11], [],
+            [2, 5, 7], [], [11], [],
+            [], [], [1, 11], [],
+            [2, 5, 7], [], [11], [],
         ]
     }
 }
@@ -165,7 +170,7 @@ class Player {
                 })
 
                 this.step++;
-            }, 120)
+            }, 100)
         }
         else {
             clearInterval(this.interval)
