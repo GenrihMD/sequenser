@@ -1,3 +1,5 @@
+import { Pattern } from "./patterns.js";
+
 const LINE_NUMBER = 12
 const BEATS_NUMBER = 16
 
@@ -55,20 +57,10 @@ grd.addColorStop(0.2, "#ff7900d9");
 grd.addColorStop(1, "#106822d9");
 ctx.fillStyle = grd;
 
-class Pattern {
-    constructor() {
-        this.beats = [
-            [1], [], [11], [],
-            [2, 5, 7], [], [11], [],
-            [], [], [1, 11], [],
-            [2, 5, 7], [], [11], [],
-        ]
-    }
-}
-
 const p = new Pattern()
 
 function drawBeats() {
+    console.log(background)
     ctx.putImageData(background, 0, 0)
     for (let i = 0; i < BEATS_NUMBER; i++) {
         const beat = p.beats[i]
@@ -110,8 +102,8 @@ const TONES = [
 ]
 
 const DRUM_FILES = [
-    'assets/Drum Shots/Kicks/BVKER - Drillers Kick - 01.wav',
-    'assets/Drum Shots/Snares/BVKER - Drillers Snare - 01.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Kit 3/kickldk16.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Kit 1/snareldk01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Open Hat - 03.wav',
 
@@ -122,8 +114,8 @@ const DRUM_FILES = [
 
     'assets/Drum Shots/Cymbals/BVKER - Drillers Crash - 01.wav',
     'assets/Drum Shots/Cymbals/BVKER - Drillers Ride - 01.wav',
-    'assets/Drum Shots/Cymbals/BVKER - Drillers Closed Hat - 10.wav',
-    'assets/Drum Shots/Percs/BVKER - Drillers Perc 03.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Kit 3/hatldk11.wav',
+    'assets/Breaks & Beatz - Producersbuzz.com/breakz n beatz DnB Klub Kit/chbb31.wav',
 ]
 
 const DRUMS = []
